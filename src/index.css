@@ -23,6 +23,34 @@ canvas {
     touch-action: none;
 }
 
+/* ------------------------------------------------------------------------------------------- */
+/*                                    scroll bar                                               */
+/*                                    scroll bar                                               */
+/* ------------------------------------------------------------------------------------------- */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background-color: rgba(255, 255, 255, 0);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background-color: rgb(122, 124, 122);
+    /* background-image: url('/images/a-giphy.webp');
+    background-position: center;
+    background-size: cover; */
+    border-radius: 100px;
+}
+
+/* Hover */
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(165, 168, 165);
+}
+
 @layer utilities {
     .container {
         @apply w-full mx-auto max-w-xl;

@@ -5,11 +5,11 @@ import { getDaysOfYear } from "../utils/getDaysOfYear"
 const Calendar = () => {
     const months: daysOfEachMonthType = getDaysOfYear(2024)
     return (
-        <div className="mb-10">
+        <div className="pb-8 border px-4 rounded-lg h-[500px] overflow-y-scroll overflow-x-hidden">
             {
                 Object.entries(months).map(([month, days]) => (
                     <div key={month}>
-                        <h2 className="font-semibold mt-5 mb-1">{month}</h2>
+                        <h2 className="font-semibold mt-5 mb-1 text-center">{month}</h2>
                         <div className="grid grid-cols-7 gap-1">
                             {
                                 daysNames.map((day) => <div key={day} className="italic">{day}</div>)
