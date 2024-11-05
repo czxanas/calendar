@@ -24,6 +24,10 @@ canvas {
 }
 
 @layer utilities {
+    .container {
+        @apply w-full mx-auto max-w-xl;
+      }
+      
     .flex-center {
         @apply flex items-center justify-center
     }

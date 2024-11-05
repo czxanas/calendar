@@ -1,7 +1,7 @@
 const Navbar = () => {
   return (
-    <header className="">
-      Hello World...
+    <header className="container py-4">
+      <h1 className="font-semibold">Hello World</h1>
     </header>
   )
 }
