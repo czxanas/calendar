@@ -1,0 +1,1 @@
+export type daysOfEachMonthType = { [month: string]: string[] }
