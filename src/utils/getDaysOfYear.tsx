@@ -21,7 +21,7 @@ export const getDaysOfYear = (year: number) => {
 
         // get all days in that month
         const daysInThatMonth = eachDayOfInterval({ start, end })
-            .map((date) => format(date, 'dd',))
+            .map((date) => format(date, 'dd'))
 
         // Add placeholders for alignment
         const alignedDays = Array(firstDayOfWeek).fill("").concat(daysInThatMonth)
