@@ -2,26 +2,32 @@ import { useState } from "react"
 import { daysNames } from "../constants/days"
 import { daysOfEachMonthType } from "../types/daysOfEachMonthType"
 import { getDaysOfYear } from "../utils/getDaysOfYear"
+import { format } from "date-fns"
 
 const Calendar = () => {
     const year: number = 2024
     const months: daysOfEachMonthType = getDaysOfYear(year)
-    const [chosenDate, setChosenDate] = useState<string | null>(null)
+    // Store the selected date and formatted date
+    const [selectedDate, setSelectedDate] = useState<{ day: string, month: string, year: number } | null>(null)
+    const [formattedDate, setFormattedDate] = useState<string | null>(null)
 
-    const handleNewDateSetting = (day: string, month: string, year: number) => {
-        const newDate = month + ' ' + day + ', ' + year
-        setChosenDate(newDate)
+    const handleDateClick = (day: string, month: string, year: number) => {
+        setSelectedDate({ day, month, year })
+
+        // Format date as "Jan 5, 2024" using date-fns
+        const date = new Date(`${month} ${day}, ${year}`)
+        setFormattedDate(format(date, "MMM d, yyyy"))
     }
 
     return (
-        <>
+        <div className="flex flex-col">
+            {/* Date Picker Display */}
             <div className="w-[300px] text-sm py-1.5 px-2 mb-5 rounded-md border border-white/60 flex items-center gap-3">
                 <img src="/assets/images/calendar.svg" className="cursor-pointer max-w-5" title="Pick a date" />
-                {chosenDate ?
-                    <span>{chosenDate}</span> :
-                    <span className="text-white/60">Pick a date</span>
-                }
+                {formattedDate ? <span>{formattedDate}</span> : <span className="text-white/60">Pick a date</span>}
             </div>
+
+            {/* Calendar Display */}
             <div className="pb-8 border px-4 rounded-lg h-[500px] w-[300px] overflow-y-scroll overflow-x-hidden bg-white text-black">
                 {
                     Object.entries(months).map(([month, days]) => (
@@ -34,9 +40,13 @@ const Calendar = () => {
                             </div>
                             <ul className="grid grid-cols-7 gap-1">
                                 {days.map((day, index) => (
-                                    <li className="rounded py-0.5 px-1 cursor-pointer text-center" key={index}>
-                                        {day ? <span onClick={() => handleNewDateSetting(day, month, year)}>{day}</span> : ' '}
-                                        {/* {day || ' '} */}
+                                    <li
+                                        key={index}
+                                        className={`rounded py-0.5 px-1 cursor-pointer text-center ${selectedDate?.day === day && selectedDate?.month === month ? "bg-blue-600 text-white" : ""
+                                            }`}
+                                        onClick={() => handleDateClick(day, month, year)}
+                                    >
+                                        {day || " "} {/* Display empty space for alignment */}
                                     </li>
                                 ))}
                             </ul>
@@ -44,7 +54,7 @@ const Calendar = () => {
                     ))
                 }
             </div>
-        </>
+        </div>
     )
 }
 
