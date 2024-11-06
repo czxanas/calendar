@@ -40,14 +40,15 @@ const Calendar = () => {
                             </div>
                             <ul className="grid grid-cols-7 gap-1">
                                 {days.map((day, index) => (
-                                    <li
-                                        key={index}
-                                        className={`rounded py-0.5 px-1 cursor-pointer text-center ${selectedDate?.day === day && selectedDate?.month === month ? "bg-blue-600 text-white" : ""
-                                            }`}
-                                        onClick={() => handleDateClick(day, month, year)}
-                                    >
-                                        {day || " "} {/* Display empty space for alignment */}
-                                    </li>
+                                    day ?
+                                        <li
+                                            key={index} onClick={() => handleDateClick(day, month, year)}
+                                            className={`rounded py-0.5 px-1 cursor-pointer text-center ${selectedDate?.day === day && selectedDate?.month === month ? "bg-blue-600 text-white" : ""}`}
+                                        >
+                                            {day ? <span >{day}</span> : null}
+                                        </li>
+                                        : 
+                                        <li key={index+day}></li>
                                 ))}
                             </ul>
                         </div>
