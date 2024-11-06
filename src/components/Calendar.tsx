@@ -47,8 +47,8 @@ const Calendar = () => {
                                         >
                                             {day ? <span >{day}</span> : null}
                                         </li>
-                                        : 
-                                        <li key={index+day}></li>
+                                        :
+                                        <li key={index + day}></li>
                                 ))}
                             </ul>
                         </div>
