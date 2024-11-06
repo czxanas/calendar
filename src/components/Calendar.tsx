@@ -30,6 +30,7 @@ const Calendar = () => {
                 <div onClick={() => setStatus('start')} className="py-1.5 px-2 mb-5 rounded-md border border-white/60 flex items-center gap-3">
                     <img src="/assets/images/calendar.svg" className="cursor-pointer max-w-5" title="Pick a date" />
                     {selectedStart ? <span>{selectedStart}</span> : <span className="text-white/60">Check-in</span>}
+                    
                 </div>
                 <div onClick={() => setStatus('end')} className="py-1.5 px-2 mb-5 rounded-md border border-white/60 flex items-center gap-3">
                     <img src="/assets/images/calendar.svg" className="cursor-pointer max-w-5" title="Pick a date" />
