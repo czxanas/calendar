@@ -4,6 +4,7 @@ import useCalendarStore from "../stores/calendar"
 import { format, isAfter, isBefore, parse } from "date-fns"
 
 
+// inputs where user can click then select the date
 // memoize my component to avoid future re-renders
 const SelectDate = memo(({ check }: { check: 'check-in' | 'check-out' }) => {
     const { status, setStatus, selectedStart, voidSelectedStart, selectedEnd, voidSelectedEnd } = useCalendarStore()
@@ -36,6 +37,7 @@ const SelectDate = memo(({ check }: { check: 'check-in' | 'check-out' }) => {
 })
 
 
+// get the list of all days
 const CalendarDays = () => {
     const { status, year, daysOfMonthsOfTheYear: months, selectedStart, selectedEnd, voidSelectedEnd, setSelectedStart, setStatus, setSelectedEnd } = useCalendarStore()
 
