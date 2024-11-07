@@ -1,11 +1,40 @@
-import { useCallback, useEffect, useState } from "react"
+import { memo, useCallback, useEffect } from "react"
 import { daysNames } from "../constants/days"
 import useCalendarStore from "../stores/calendar"
 import { format, isAfter, isBefore, parse } from "date-fns"
 
+// memoize my component to avoid fututre re-renders
+const SelectDate = memo(({ check }: { check: 'check-in' | 'check-out' }) => {
+    const { setStatus, selectedStart, voidSelectedStart, selectedEnd, voidSelectedEnd } = useCalendarStore()
+
+    const handleStartClick = () => setStatus('start')
+    const handleEndClick = () => setStatus('end')
+    const handleVoidStart = (e: React.MouseEvent) => { e.stopPropagation(); voidSelectedStart() }
+    const handleVoidEnd = (e: React.MouseEvent) => { e.stopPropagation(); voidSelectedEnd() }
+
+    const renderDateField = (
+        label: 'check-in' | 'check-out',
+        selectedDate: string | null,
+        handleDateClick: () => void,
+        handleClearClick: (e: React.MouseEvent) => void
+    ) => (
+        <div onClick={handleDateClick} className="py-1.5 px-2 mb-5 rounded-md border border-white/60 flex items-center gap-3">
+            <img src="/assets/images/calendar.svg" className="cursor-pointer max-w-5" title="Pick a date" />
+            {selectedDate ? <span>{selectedDate}</span> : <span className="text-white/60">{label}</span>}
+            <span onClick={handleClearClick} className="ms-auto cursor-pointer">&#10006;</span>
+        </div>
+    )
+
+    return (
+        <>
+            { check === 'check-in' && renderDateField('check-in', selectedStart, handleStartClick, handleVoidStart) }
+            { check === 'check-out' && renderDateField('check-out', selectedEnd, handleEndClick, handleVoidEnd) }
+        </>
+    )
+})
+
 const Calendar = () => {
-    const { year, daysOfMonthsOfTheYear: months, setDaysOfMonthsOfTheNewYear, selectedStart, selectedEnd, setSelectedStart, setSelectedEnd, voidSelectedStart, voidSelectedEnd } = useCalendarStore()
-    const [status, setStatus] = useState<null | 'start' | 'end'>(null)
+    const { year, daysOfMonthsOfTheYear: months, setDaysOfMonthsOfTheNewYear, selectedStart, selectedEnd, setSelectedStart, setSelectedEnd, voidSelectedEnd, status, setStatus } = useCalendarStore()
 
     const handleDateClick = useCallback((day: string, month: string) => {
         if (status === 'start') {
@@ -26,7 +55,7 @@ const Calendar = () => {
             setSelectedEnd(day, month, year)
             setStatus(null)
         }
-    }, [status, year, setSelectedStart, selectedStart, setSelectedEnd, selectedEnd, voidSelectedEnd])
+    }, [status, year, setSelectedStart, selectedStart, setSelectedEnd, selectedEnd, voidSelectedEnd, setStatus])
 
     useEffect(() => {
         setDaysOfMonthsOfTheNewYear()
@@ -36,16 +65,8 @@ const Calendar = () => {
         <div className="flex flex-col">
             {/* Date Picker Display */}
             <div className="w-[325px] text-sm grid grid-cols-2 gap-2">
-                <div onClick={() => setStatus('start')} className="py-1.5 px-2 mb-5 rounded-md border border-white/60 flex items-center gap-3">
-                    <img src="/assets/images/calendar.svg" className="cursor-pointer max-w-5" title="Pick a date" />
-                    {selectedStart ? <span>{selectedStart}</span> : <span className="text-white/60">Check-in</span>}
-                    <span onClick={(e) => { e.stopPropagation(); voidSelectedStart() }} className="ms-auto cursor-pointer">&#10006;</span>
-                </div>
-                <div onClick={() => setStatus('end')} className="py-1.5 px-2 mb-5 rounded-md border border-white/60 flex items-center gap-3">
-                    <img src="/assets/images/calendar.svg" className="cursor-pointer max-w-5" title="Pick a date" />
-                    {selectedEnd ? <span>{selectedEnd}</span> : <span className="text-white/60">Check-out</span>}
-                    <span onClick={(e) => { e.stopPropagation(); voidSelectedEnd() }} className="ms-auto cursor-pointer">&#10006;</span>
-                </div>
+                <SelectDate check="check-in" />
+                <SelectDate check="check-out" />
             </div>
 
             {/* Calendar Display */}

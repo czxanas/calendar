@@ -45,6 +45,9 @@ const useCalendarStore = create<calendarStoreType>((set, get) => {
     //set selectedStart to null
     const voidSelectedEnd = () => set({ selectedEnd: null })
 
+    //set status to a new value
+    const setStatus = (newStatus: null | 'start' | 'end') => set({status: newStatus})
+
     return {
         year: 2024, // get the actuel year, 2024
         daysOfMonthsOfTheYear: {}, // get all month & their days, { [junuary]: [1, 2, ..., 31], ... }
@@ -55,7 +58,9 @@ const useCalendarStore = create<calendarStoreType>((set, get) => {
         setSelectedStart,
         setSelectedEnd,
         voidSelectedStart,
-        voidSelectedEnd
+        voidSelectedEnd,
+        status: null,
+        setStatus
     }
 })
 
