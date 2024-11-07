@@ -3,7 +3,8 @@ import { daysNames } from "../constants/days"
 import useCalendarStore from "../stores/calendar"
 import { format, isAfter, isBefore, parse } from "date-fns"
 
-// memoize my component to avoid fututre re-renders
+
+// memoize my component to avoid future re-renders
 const SelectDate = memo(({ check }: { check: 'check-in' | 'check-out' }) => {
     const { setStatus, selectedStart, voidSelectedStart, selectedEnd, voidSelectedEnd } = useCalendarStore()
 
@@ -19,22 +20,23 @@ const SelectDate = memo(({ check }: { check: 'check-in' | 'check-out' }) => {
         handleClearClick: (e: React.MouseEvent) => void
     ) => (
         <div onClick={handleDateClick} className="py-1.5 px-2 mb-5 rounded-md border border-white/60 flex items-center gap-3">
-            <img src="/assets/images/calendar.svg" className="cursor-pointer max-w-5" title="Pick a date" />
+            <img src="/assets/images/calendar.svg" className="cursor-pointer max-w-5" title="Pick a date" aria-label="Calendar icon for picking a date" />
             {selectedDate ? <span>{selectedDate}</span> : <span className="text-white/60">{label}</span>}
-            <span onClick={handleClearClick} className="ms-auto cursor-pointer">&#10006;</span>
+            <span onClick={handleClearClick} className="ms-auto cursor-pointer" role="button" aria-label={`Clear selected ${label} date`}>&#10006;</span>
         </div>
     )
 
     return (
         <>
-            { check === 'check-in' && renderDateField('check-in', selectedStart, handleStartClick, handleVoidStart) }
-            { check === 'check-out' && renderDateField('check-out', selectedEnd, handleEndClick, handleVoidEnd) }
+            {check === 'check-in' && renderDateField('check-in', selectedStart, handleStartClick, handleVoidStart)}
+            {check === 'check-out' && renderDateField('check-out', selectedEnd, handleEndClick, handleVoidEnd)}
         </>
     )
 })
 
-const Calendar = () => {
-    const { year, daysOfMonthsOfTheYear: months, setDaysOfMonthsOfTheNewYear, selectedStart, selectedEnd, setSelectedStart, setSelectedEnd, voidSelectedEnd, status, setStatus } = useCalendarStore()
+
+const CalendarDays = () => {
+    const { status, year, daysOfMonthsOfTheYear: months, selectedStart, selectedEnd, voidSelectedEnd, setSelectedStart, setStatus, setSelectedEnd } = useCalendarStore()
 
     const handleDateClick = useCallback((day: string, month: string) => {
         if (status === 'start') {
@@ -55,21 +57,10 @@ const Calendar = () => {
             setSelectedEnd(day, month, year)
             setStatus(null)
         }
-    }, [status, year, setSelectedStart, selectedStart, setSelectedEnd, selectedEnd, voidSelectedEnd, setStatus])
-
-    useEffect(() => {
-        setDaysOfMonthsOfTheNewYear()
-    }, [setDaysOfMonthsOfTheNewYear])
+    }, [status, year, selectedStart, selectedEnd, setSelectedEnd, setSelectedStart, voidSelectedEnd, setStatus])
 
     return (
-        <div className="flex flex-col">
-            {/* Date Picker Display */}
-            <div className="w-[325px] text-sm grid grid-cols-2 gap-2">
-                <SelectDate check="check-in" />
-                <SelectDate check="check-out" />
-            </div>
-
-            {/* Calendar Display */}
+        <>
             {
                 status &&
                 <div className="pb-8 border px-4 rounded-lg h-[500px] w-[325px] overflow-y-scroll overflow-x-hidden bg-white text-black">
@@ -113,6 +104,28 @@ const Calendar = () => {
                     }
                 </div>
             }
+        </>
+    )
+}
+
+
+const Calendar = () => {
+    const { setDaysOfMonthsOfTheNewYear } = useCalendarStore()
+
+    useEffect(() => {
+        setDaysOfMonthsOfTheNewYear()
+    }, [setDaysOfMonthsOfTheNewYear])
+
+    return (
+        <div className="flex flex-col">
+            {/* Date Picker Display */}
+            <div className="w-[325px] text-sm grid grid-cols-2 gap-2">
+                <SelectDate check="check-in" />
+                <SelectDate check="check-out" />
+            </div>
+
+            {/* Calendar Display */}
+            <CalendarDays />
         </div>
     )
 }
