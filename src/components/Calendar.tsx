@@ -62,18 +62,15 @@ const CalendarDays = () => {
     const parseDate = (day: string, month: string) => parse(`${day} ${month} ${year}`, 'd MMMM yyyy', new Date())
     const formatDate = (date: Date) => format(date, 'MMM d, yyyy')
 
-    const getDateStatuses = useCallback(
-        (date: string) => {
-            const isStart = selectedStart === date
-            const isEnd = selectedEnd === date
-            const isBetween = selectedStart && selectedEnd &&
-                isAfter(parse(date, 'MMM d, yyyy', new Date()), parse(selectedStart, 'MMM d, yyyy', new Date())) &&
-                isBefore(parse(date, 'MMM d, yyyy', new Date()), parse(selectedEnd, 'MMM d, yyyy', new Date()))
+    const getDateStatuses = useCallback((date: string) => {
+        const isStart = selectedStart === date
+        const isEnd = selectedEnd === date
+        const isBetween = selectedStart && selectedEnd &&
+            isAfter(parse(date, 'MMM d, yyyy', new Date()), parse(selectedStart, 'MMM d, yyyy', new Date())) &&
+            isBefore(parse(date, 'MMM d, yyyy', new Date()), parse(selectedEnd, 'MMM d, yyyy', new Date()))
 
-            return { isStart, isEnd, isBetween }
-        },
-        [selectedStart, selectedEnd]
-    )
+        return { isStart, isEnd, isBetween }
+    }, [selectedStart, selectedEnd])
 
     if (!status) return null
 
@@ -92,7 +89,7 @@ const CalendarDays = () => {
                                 {days.map((day: string, index: number) => {
                                     if (!day) return <li key={index + day} />
                                     const date = formatDate(parseDate(day, month))
-                                    const {isStart, isEnd, isBetween} = getDateStatuses(date)
+                                    const { isStart, isEnd, isBetween } = getDateStatuses(date)
                                     return (
                                         <li
                                             key={index}
