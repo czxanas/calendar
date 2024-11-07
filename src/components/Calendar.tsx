@@ -21,7 +21,7 @@ const SelectDate = memo(({ check }: { check: 'check-in' | 'check-out' }) => {
         handleDateClick: () => void,
         handleClearClick: (e: React.MouseEvent) => void
     ) => (
-        <div onClick={handleDateClick} className={`py-1.5 px-2 mb-5 rounded-md border border-white/60 flex items-center gap-3 ${(status && status===state) ? 'ring-blue-500 ring-2' : ''}`}>
+        <div onClick={handleDateClick} className={`calendar-el py-1.5 px-2 mb-5 rounded-md border border-white/60 flex items-center gap-3 ${(status && status===state) ? 'ring-blue-500 ring-2' : ''}`}>
             <img src="/assets/images/calendar.svg" className="cursor-pointer max-w-5" title="Pick a date" aria-label="Calendar icon for picking a date" />
             {selectedDate ? <span className="whitespace-nowrap">{selectedDate}</span> : <span className="text-white/60 capitalize whitespace-nowrap">{label}</span>}
             <span onClick={handleClearClick} className="ms-auto cursor-pointer" role="button" aria-label={`Clear selected ${label} date`}>&#10006;</span>
@@ -81,7 +81,7 @@ const CalendarDays = () => {
         <>
             {
                 status &&
-                <div className="pb-8 border px-4 rounded-lg h-[500px] w-[325px] overflow-y-scroll overflow-x-hidden bg-white text-black">
+                <div className="calendar-el pb-8 border px-4 rounded-lg h-[500px] w-[325px] overflow-y-scroll overflow-x-hidden bg-white text-black">
                     {Object.entries(months).map(([month, days]) => (
                         <div key={month}>
                             <h2 className="font-semibold my-5 text-center">{month} {year}</h2>
@@ -118,11 +118,22 @@ const CalendarDays = () => {
 
 
 const Calendar = () => {
-    const { setDaysOfMonthsOfTheNewYear } = useCalendarStore()
+    const { setDaysOfMonthsOfTheNewYear, setStatus } = useCalendarStore()
 
     useEffect(() => {
         setDaysOfMonthsOfTheNewYear()
     }, [setDaysOfMonthsOfTheNewYear])
+
+    useEffect(() => {
+        const handleClickOutsideCalendar = (event: MouseEvent) => {
+            const calendarElements = document.querySelectorAll('.calendar-el')
+            const target = event.target as HTMLElement
+            const isOutside = !Array.from(calendarElements).some(element => element.contains(target))
+            if (isOutside) setStatus(null)
+        }
+        document.addEventListener('click', handleClickOutsideCalendar)
+        return () => document.removeEventListener('click', handleClickOutsideCalendar)
+    }, [setStatus])
 
     return (
         <div className="flex flex-col">
