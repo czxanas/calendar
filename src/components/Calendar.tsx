@@ -21,7 +21,7 @@ const SelectDate = memo(({ check }: { check: 'check-in' | 'check-out' }) => {
     ) => (
         <div onClick={handleDateClick} className="py-1.5 px-2 mb-5 rounded-md border border-white/60 flex items-center gap-3">
             <img src="/assets/images/calendar.svg" className="cursor-pointer max-w-5" title="Pick a date" aria-label="Calendar icon for picking a date" />
-            {selectedDate ? <span>{selectedDate}</span> : <span className="text-white/60">{label}</span>}
+            {selectedDate ? <span className="whitespace-nowrap">{selectedDate}</span> : <span className="text-white/60 capitalize whitespace-nowrap">{label}</span>}
             <span onClick={handleClearClick} className="ms-auto cursor-pointer" role="button" aria-label={`Clear selected ${label} date`}>&#10006;</span>
         </div>
     )
