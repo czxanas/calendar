@@ -48,6 +48,16 @@ const useCalendarStore = create<calendarStoreType>((set, get) => {
     //set status to a new value
     const setStatus = (newStatus: null | 'start' | 'end') => set({status: newStatus})
 
+    // change the value of xLeft
+    const setNewXLeft = (value: number) => {
+        set({xLeft: value})
+    }
+    
+    // change the value of xLeft
+    const setNewYTop = (value: number) => {
+        set({yTop: value})
+    }
+
     return {
         year: 2024, // get the actuel year, 2024
         daysOfMonthsOfTheYear: {}, // get all month & their days, { [junuary]: [1, 2, ..., 31], ... }
@@ -60,7 +70,11 @@ const useCalendarStore = create<calendarStoreType>((set, get) => {
         voidSelectedStart,
         voidSelectedEnd,
         status: null,
-        setStatus
+        setStatus,
+        xLeft: 0, // position from left in px
+        yTop: 0, //position from the top of the viewport in px
+        setNewXLeft,
+        setNewYTop
     }
 })
 
