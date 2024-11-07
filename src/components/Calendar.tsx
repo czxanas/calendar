@@ -59,49 +59,57 @@ const CalendarDays = () => {
         }
     }, [status, year, selectedStart, selectedEnd, setSelectedEnd, setSelectedStart, voidSelectedEnd, setStatus])
 
+    const parseDate = (day: string, month: string) => parse(`${day} ${month} ${year}`, 'd MMMM yyyy', new Date())
+    const formatDate = (date: Date) => format(date, 'MMM d, yyyy')
+
+    const getDateStatuses = useCallback(
+        (date: string) => {
+            const isStart = selectedStart === date
+            const isEnd = selectedEnd === date
+            const isBetween = selectedStart && selectedEnd &&
+                isAfter(parse(date, 'MMM d, yyyy', new Date()), parse(selectedStart, 'MMM d, yyyy', new Date())) &&
+                isBefore(parse(date, 'MMM d, yyyy', new Date()), parse(selectedEnd, 'MMM d, yyyy', new Date()))
+
+            return { isStart, isEnd, isBetween }
+        },
+        [selectedStart, selectedEnd]
+    )
+
+    if (!status) return null
+
     return (
         <>
             {
                 status &&
                 <div className="pb-8 border px-4 rounded-lg h-[500px] w-[325px] overflow-y-scroll overflow-x-hidden bg-white text-black">
-                    {
-                        Object.entries(months).map(([month, days]) => (
-                            <div key={month}>
-                                <h2 className="font-semibold my-5 text-center">{month} {year}</h2>
-                                <div className="grid grid-cols-7 gap-1">
-                                    {
-                                        daysNames.map((day) => <div key={day} className="font-thin text-sm text-center mb-2">{day}</div>)
-                                    }
-                                </div>
-                                <ul className="grid grid-cols-7 gap-1">
-                                    {days.map((day: string, index: number) => {
-                                        if (!day) return <li key={index + day}></li>
-
-                                        const date = format(parse(`${day} ${month} ${year}`, 'd MMMM yyyy', new Date()), 'MMM d, yyyy')
-                                        const isStart = selectedStart === date
-                                        const isEnd = selectedEnd === date
-                                        const isBetween = selectedStart && selectedEnd &&
-                                            isAfter(parse(date, 'MMM d, yyyy', new Date()), parse(selectedStart, 'MMM d, yyyy', new Date())) &&
-                                            isBefore(parse(date, 'MMM d, yyyy', new Date()), parse(selectedEnd, 'MMM d, yyyy', new Date()))
-
-                                        return (
-                                            <li
-                                                key={index}
-                                                onClick={() => handleDateClick(day, month)}
-                                                className={`rounded py-0.5 px-1 cursor-pointer text-center
+                    {Object.entries(months).map(([month, days]) => (
+                        <div key={month}>
+                            <h2 className="font-semibold my-5 text-center">{month} {year}</h2>
+                            <div className="grid grid-cols-7 gap-1">
+                                {daysNames.map((day) => <div key={day} className="font-thin text-sm text-center mb-2">{day}</div>)}
+                            </div>
+                            <ul className="grid grid-cols-7 gap-1">
+                                {days.map((day: string, index: number) => {
+                                    if (!day) return <li key={index + day} />
+                                    const date = formatDate(parseDate(day, month))
+                                    const {isStart, isEnd, isBetween} = getDateStatuses(date)
+                                    return (
+                                        <li
+                                            key={index}
+                                            onClick={() => handleDateClick(day, month)}
+                                            className={`rounded py-0.5 px-1 cursor-pointer text-center
                                                     ${isStart ? 'bg-blue-500 text-white' : ''}
                                                     ${isEnd ? 'bg-blue-500 text-white' : ''}
                                                     ${isBetween ? 'bg-gray-200' : ''}
                                                 `}
-                                            >
-                                                {day}
-                                            </li>
-                                        )
-                                    })}
-                                </ul>
-                            </div>
-                        ))
-                    }
+                                        >
+                                            {day}
+                                        </li>
+                                    )
+                                })}
+                            </ul>
+                        </div>
+                    ))}
                 </div>
             }
         </>
