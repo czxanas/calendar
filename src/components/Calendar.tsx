@@ -4,7 +4,7 @@ import useCalendarStore from "../stores/calendar"
 import { format, isAfter, isBefore, parse } from "date-fns"
 
 const Calendar = () => {
-    const { year, daysOfMonthsOfTheYear: months, setDaysOfMonthsOfTheNewYear, selectedStart, selectedEnd, setSelectedStart, setSelectedEnd } = useCalendarStore()
+    const { year, daysOfMonthsOfTheYear: months, setDaysOfMonthsOfTheNewYear, selectedStart, selectedEnd, setSelectedStart, setSelectedEnd, voidSelectedStart, voidSelectedEnd } = useCalendarStore()
     const [status, setStatus] = useState<null | 'start' | 'end'>(null)
 
     const handleDateClick = useCallback((day: string, month: string) => {
@@ -14,10 +14,15 @@ const Calendar = () => {
             setStatus(null)
         }
         if (status === 'end') {
+            const formattedDate = format(parse(`${day} ${month} ${year}`, 'd MMMM yyyy', new Date()), 'MMM d, yyyy')
+            if (selectedStart && isBefore(parse(formattedDate, 'MMM d, yyyy', new Date()), parse(selectedStart, 'MMM d, yyyy', new Date()))) {
+                console.warn("End date must be later than the start date.")
+                return
+            }
             setSelectedEnd(day, month, year)
             setStatus(null)
         }
-    }, [status, year, setSelectedStart, setSelectedEnd])
+    }, [status, year, setSelectedStart, selectedStart, setSelectedEnd])
 
     useEffect(() => {
         setDaysOfMonthsOfTheNewYear()
@@ -30,11 +35,12 @@ const Calendar = () => {
                 <div onClick={() => setStatus('start')} className="py-1.5 px-2 mb-5 rounded-md border border-white/60 flex items-center gap-3">
                     <img src="/assets/images/calendar.svg" className="cursor-pointer max-w-5" title="Pick a date" />
                     {selectedStart ? <span>{selectedStart}</span> : <span className="text-white/60">Check-in</span>}
-                    
+                    <span onClick={(e) => { e.stopPropagation(); voidSelectedStart() }} className="ms-auto cursor-pointer">&#10006;</span>
                 </div>
                 <div onClick={() => setStatus('end')} className="py-1.5 px-2 mb-5 rounded-md border border-white/60 flex items-center gap-3">
                     <img src="/assets/images/calendar.svg" className="cursor-pointer max-w-5" title="Pick a date" />
                     {selectedEnd ? <span>{selectedEnd}</span> : <span className="text-white/60">Check-out</span>}
+                    <span onClick={(e) => { e.stopPropagation(); voidSelectedEnd() }} className="ms-auto cursor-pointer">&#10006;</span>
                 </div>
             </div>
 

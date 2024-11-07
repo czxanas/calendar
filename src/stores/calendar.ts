@@ -30,6 +30,7 @@ const useCalendarStore = create<calendarStoreType>((set, get) => {
     // setter to update the selectedStart
     const setSelectedStart = (day: string, month: string, year: number) => {
         const formattedDate = handleFormattedDate(day, month, year)
+        // Ensure end date is after the start date
         set({ selectedStart: formattedDate })
     }
     // setter to update the selectedEnd 
@@ -37,6 +38,12 @@ const useCalendarStore = create<calendarStoreType>((set, get) => {
         const formattedDate = handleFormattedDate(day, month, year)
         set({ selectedEnd: formattedDate })
     }
+
+    //set selectedStart to null
+    const voidSelectedStart = () => set({ selectedStart: null })
+
+    //set selectedStart to null
+    const voidSelectedEnd = () => set({ selectedEnd: null })
 
     return {
         year: 2024, // get the actuel year, 2024
@@ -46,7 +53,9 @@ const useCalendarStore = create<calendarStoreType>((set, get) => {
         setNewYear,
         setDaysOfMonthsOfTheNewYear,
         setSelectedStart,
-        setSelectedEnd
+        setSelectedEnd,
+        voidSelectedStart,
+        voidSelectedEnd
     }
 })
 

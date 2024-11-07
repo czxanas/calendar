@@ -7,4 +7,6 @@ export type calendarStoreType = {
     setDaysOfMonthsOfTheNewYear: () => void;
     setSelectedStart: (day: string, month: string, year: number) => void;
     setSelectedEnd: (day: string, month: string, year: number) => void;
+    voidSelectedStart: () => void;
+    voidSelectedEnd: () => void;
 }
