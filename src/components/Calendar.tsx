@@ -8,21 +8,25 @@ const Calendar = () => {
     const [status, setStatus] = useState<null | 'start' | 'end'>(null)
 
     const handleDateClick = useCallback((day: string, month: string) => {
-        // status === 'start' ? setSelectedStart(day, month, year) : status === 'end' ? setSelectedEnd(day, month, year) : null
         if (status === 'start') {
+            const formattedDate = format(parse(`${day} ${month} ${year}`, 'd MMMM yyyy', new Date()), 'MMM d, yyyy')
+            // Check if the new start date is after the current end date
+            if (selectedEnd && isAfter(parse(formattedDate, 'MMM d, yyyy', new Date()), parse(selectedEnd, 'MMM d, yyyy', new Date()))) {
+                voidSelectedEnd() // Clear end date if start date is newer
+            }
             setSelectedStart(day, month, year)
             setStatus(null)
         }
         if (status === 'end') {
             const formattedDate = format(parse(`${day} ${month} ${year}`, 'd MMMM yyyy', new Date()), 'MMM d, yyyy')
+            // Check if end date is after start date
             if (selectedStart && isBefore(parse(formattedDate, 'MMM d, yyyy', new Date()), parse(selectedStart, 'MMM d, yyyy', new Date()))) {
-                console.warn("End date must be later than the start date.")
                 return
             }
             setSelectedEnd(day, month, year)
             setStatus(null)
         }
-    }, [status, year, setSelectedStart, selectedStart, setSelectedEnd])
+    }, [status, year, setSelectedStart, selectedStart, setSelectedEnd, selectedEnd, voidSelectedEnd])
 
     useEffect(() => {
         setDaysOfMonthsOfTheNewYear()
