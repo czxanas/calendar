@@ -6,7 +6,7 @@ import { format, isAfter, isBefore, parse } from "date-fns"
 
 // memoize my component to avoid future re-renders
 const SelectDate = memo(({ check }: { check: 'check-in' | 'check-out' }) => {
-    const { setStatus, selectedStart, voidSelectedStart, selectedEnd, voidSelectedEnd } = useCalendarStore()
+    const { status, setStatus, selectedStart, voidSelectedStart, selectedEnd, voidSelectedEnd } = useCalendarStore()
 
     const handleStartClick = () => setStatus('start')
     const handleEndClick = () => setStatus('end')
@@ -14,12 +14,13 @@ const SelectDate = memo(({ check }: { check: 'check-in' | 'check-out' }) => {
     const handleVoidEnd = (e: React.MouseEvent) => { e.stopPropagation(); voidSelectedEnd() }
 
     const renderDateField = (
+        state: 'start' | 'end',
         label: 'check-in' | 'check-out',
         selectedDate: string | null,
         handleDateClick: () => void,
         handleClearClick: (e: React.MouseEvent) => void
     ) => (
-        <div onClick={handleDateClick} className="py-1.5 px-2 mb-5 rounded-md border border-white/60 flex items-center gap-3">
+        <div onClick={handleDateClick} className={`py-1.5 px-2 mb-5 rounded-md border border-white/60 flex items-center gap-3 ${(status && status===state) ? 'ring-blue-500 ring-2' : ''}`}>
             <img src="/assets/images/calendar.svg" className="cursor-pointer max-w-5" title="Pick a date" aria-label="Calendar icon for picking a date" />
             {selectedDate ? <span className="whitespace-nowrap">{selectedDate}</span> : <span className="text-white/60 capitalize whitespace-nowrap">{label}</span>}
             <span onClick={handleClearClick} className="ms-auto cursor-pointer" role="button" aria-label={`Clear selected ${label} date`}>&#10006;</span>
@@ -28,8 +29,8 @@ const SelectDate = memo(({ check }: { check: 'check-in' | 'check-out' }) => {
 
     return (
         <>
-            {check === 'check-in' && renderDateField('check-in', selectedStart, handleStartClick, handleVoidStart)}
-            {check === 'check-out' && renderDateField('check-out', selectedEnd, handleEndClick, handleVoidEnd)}
+            {check === 'check-in' && renderDateField('start', 'check-in', selectedStart, handleStartClick, handleVoidStart)}
+            {check === 'check-out' && renderDateField('end', 'check-out', selectedEnd, handleEndClick, handleVoidEnd)}
         </>
     )
 })
