@@ -9,7 +9,8 @@ const handleFormattedDate = (day: string, month: string, year: number) => {
 
 const useCalendarStore = create<calendarStoreType>((set, get) => {
     // setter to update the year
-    const setNewYear = (newYear: number) => {
+    // const setNewYear = (newYear: number) => {
+    const setNewYear = () => {
         const currentYear = parseInt(format(startOfToday(), 'yyyy'));
         if (get().year !== currentYear) {
             set({ year: currentYear });
