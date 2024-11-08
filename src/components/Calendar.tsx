@@ -101,8 +101,7 @@ const CalendarDays = () => {
             {
                 status &&
                 <div className={`calendar-popup fixed top-0 left-0 calendar-el pb-8 border px-4 rounded-lg h-[500px] w-[325px] overflow-y-scroll overflow-x-hidden bg-white text-black`}
-                    style={{top: `${yTop+40}px`, left: `${xLeft}px`}}
-                >
+                    style={{top: `${yTop+40}px`, left: `${xLeft}px`}}>
                     {Object.entries(months).map(([month, days]) => (
                         <div key={month}>
                             <h2 className="font-semibold my-5 text-center">{month} {year}</h2>
