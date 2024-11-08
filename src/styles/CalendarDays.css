@@ -1,0 +1,4 @@
+.calendar-popup {
+    top: var(--yTop, 0px); /* Fallback to 0 if not set */
+    left: var(--xLeft, 0px); /* Fallback to 0 if not set */
+}

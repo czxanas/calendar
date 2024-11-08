@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@siberiacancode/reactuse':
+    specifier: ^0.0.72
+    version: 0.0.72(@types/react@18.3.12)(react-dom@18.3.1)(react@18.3.1)
   date-fns:
     specifier: ^4.1.0
     version: 4.1.0
@@ -740,6 +743,23 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@siberiacancode/reactuse@0.0.72(@types/react@18.3.12)(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-2VHYzYgVtJWvNPy1DcQKK8TwNj+7CJgRmK0T9CzQpS+1VEW1gCloCWNrdFt0xf6z1WXugEZ1f5b9lQYLzKa1ZA==}
+    engines: {node: '>=14'}
+    peerDependencies:
+      '@types/react': ^18.0.0
+      react: ^17.0.2 || ^18.0.0
+      react-dom: ^17.0.2 || ^18.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+    dependencies:
+      '@types/react': 18.3.12
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+      screenfull: 6.0.2
+    dev: false
 
   /@types/babel__core@7.20.5:
     resolution: {integrity: sha512-qoQprZvz5wQFJwMDqeseRXWv3rqMvhgpbXFfVyWhbx9X47POIA6i/+dXefEmZKoAgOaTdaIgNSMqMIU61yRyzA==}
@@ -1976,6 +1996,11 @@ packages:
     resolution: {integrity: sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==}
     dependencies:
       loose-envify: 1.4.0
+    dev: false
+
+  /screenfull@6.0.2:
+    resolution: {integrity: sha512-AQdy8s4WhNvUZ6P8F6PB21tSPIYKniic+Ogx0AacBMjKP1GUHN2E9URxQHtCusiwxudnCKkdy4GrHXPPJSkCCw==}
+    engines: {node: ^14.13.1 || >=16.0.0}
     dev: false
 
   /semver@6.3.1:

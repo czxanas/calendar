@@ -11,4 +11,8 @@ export type calendarStoreType = {
     voidSelectedEnd: () => void;
     status: null | 'start' | 'end';
     setStatus: (newStatus: null | 'start' | 'end') => void;
+    xLeft: number;
+    yTop: number;
+    setNewXLeft: (value: number) => void;
+    setNewYTop: (value: number) => void;
 }
