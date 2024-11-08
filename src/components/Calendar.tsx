@@ -121,7 +121,6 @@ const CalendarDays = () => {
                                 <ul className="grid grid-cols-7 gap-1">
                                     {days.map((day: string, index: number) => {
                                         if (!day) return <li key={index + day} />
-                                        const date = formatDate(parseDate(day, month))
                                         const actualDate = format(new Date(selectedYear, monthIndex[month], Number(day)),'dd MMMM yyyy')
                                         const { isStart, isEnd, isBetween } = getDateStatuses(format(actualDate,'MMM d, yyyy'))
                                         return (
@@ -135,7 +134,7 @@ const CalendarDays = () => {
                                                     ${isBetween ? 'bg-gray-200' : ''}
                                                 `}
                                             >
-                                                <div className="flex justify-center items-center h-[100%]" id={format(new Date(selectedYear, monthIndex[month], Number(day)),'dd MM yyyy')}>
+                                                <div className="flex justify-center items-center h-[100%]" id={actualDate}>
                                                 {isBefore(new Date(selectedYear, monthIndex[month], Number(day)), startOfToday()) && <div><AiOutlineLine /></div>}
                                                 {isToday(new Date(selectedYear, monthIndex[month], Number(day))) && <>{day}</>}
                                                 {isAfter(new Date(selectedYear, monthIndex[month], Number(day)), startOfToday()) && <>{day}</>}
