@@ -64,23 +64,24 @@ const CalendarDays = () => {
         January: 0, February: 1, March: 2, April: 3, May: 4, June: 5,
         July: 6, August: 7, September: 8, October: 9, November: 10, December: 11
     };
-    const handleDateClick = useCallback((day: string, month: string) => {
+    const handleDateClick = useCallback((actualDate:any) => {
         if (status === 'start') {
-            const formattedDate = format(parse(`${day} ${month} ${year}`, 'd MMMM yyyy', new Date()), 'MMM d, yyyy')
+            const formattedDate = format(actualDate,'MMM d, yyyy')
+            console.log(formattedDate)
             // Check if the new start date is after the current end date
             if (selectedEnd && isAfter(parse(formattedDate, 'MMM d, yyyy', new Date()), parse(selectedEnd, 'MMM d, yyyy', new Date()))) {
                 voidSelectedEnd() // Clear end date if start date is newer
             }
-            setSelectedStart(day, month, year)
+            setSelectedStart(actualDate.split(' ')[0], actualDate.split(' ')[1], Number(actualDate.split(' ')[2]))
             setStatus(null)
         }
         if (status === 'end') {
-            const formattedDate = format(parse(`${day} ${month} ${year}`, 'd MMMM yyyy', new Date()), 'MMM d, yyyy')
+            const formattedDate = format(actualDate,'MMM d, yyyy')
             // Check if end date is after start date
             if (selectedStart && isBefore(parse(formattedDate, 'MMM d, yyyy', new Date()), parse(selectedStart, 'MMM d, yyyy', new Date()))) {
                 return
             }
-            setSelectedEnd(day, month, year)
+            setSelectedEnd(actualDate.split(' ')[0], actualDate.split(' ')[1], Number(actualDate.split(' ')[2]))
             setStatus(null)
         }
     }, [status, year, selectedStart, selectedEnd, setSelectedEnd, setSelectedStart, voidSelectedEnd, setStatus])
@@ -121,20 +122,24 @@ const CalendarDays = () => {
                                     {days.map((day: string, index: number) => {
                                         if (!day) return <li key={index + day} />
                                         const date = formatDate(parseDate(day, month))
-                                        const { isStart, isEnd, isBetween } = getDateStatuses(date)
+                                        const actualDate = format(new Date(selectedYear, monthIndex[month], Number(day)),'dd MMMM yyyy')
+                                        const { isStart, isEnd, isBetween } = getDateStatuses(format(actualDate,'MMM d, yyyy'))
                                         return (
                                             <li
                                                 key={index}
-                                                onClick={() => handleDateClick(day, month)}
+                                                onClick={() => handleDateClick(actualDate)}
                                                 className={`rounded py-0.5 px-1 cursor-pointer text-center
+                                                    ${isBefore(new Date(selectedYear, monthIndex[month], Number(day)), startOfToday())? 'pointer-events-none':''}
                                                     ${isStart ? 'bg-blue-500 text-white' : ''}
                                                     ${isEnd ? 'bg-blue-500 text-white' : ''}
                                                     ${isBetween ? 'bg-gray-200' : ''}
                                                 `}
                                             >
-                                                {isBefore(new Date(selectedYear, monthIndex[month], Number(day)), startOfToday()) && <div className="flex justify-center items-center h-[100%]"><AiOutlineLine /></div>}
-                                                {isToday(new Date(selectedYear, monthIndex[month], Number(day))) && <div className="border-2 rounded-full border-[#d8e2dc]">{day}</div>}
-                                                {isAfter(new Date(selectedYear, monthIndex[month], Number(day)), startOfToday()) && <div className="">{day}</div>}
+                                                <div className="flex justify-center items-center h-[100%]" id={format(new Date(selectedYear, monthIndex[month], Number(day)),'dd MM yyyy')}>
+                                                {isBefore(new Date(selectedYear, monthIndex[month], Number(day)), startOfToday()) && <div><AiOutlineLine /></div>}
+                                                {isToday(new Date(selectedYear, monthIndex[month], Number(day))) && <>{day}</>}
+                                                {isAfter(new Date(selectedYear, monthIndex[month], Number(day)), startOfToday()) && <>{day}</>}
+                                                </div>
                                             </li>
                                         )
                                     })}
