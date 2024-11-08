@@ -25,7 +25,7 @@ const useCalendarStore = create<calendarStoreType>((set, get) => {
             const end: Date = endOfMonth(start) //=> Mon Sep 03 2014
             const days: string[] = eachDayOfInterval({ start, end }).map((date) => format(date, 'dd')) // array of days (numbers)
             const monthName: string = format(new Date(get().year, month), 'MMMM')
-            const firstDayOfWeek = getDay(start) - 1 === -1 ? 0 : getDay(start) - 1
+            const firstDayOfWeek = getDay(start) - 1 === -1 ? 6 : getDay(start) - 1
             const alignedDays = Array(firstDayOfWeek).fill('').concat(days)
             daysOfEachMonth[monthName] = alignedDays
         })

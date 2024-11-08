@@ -58,9 +58,9 @@ const SelectDate = memo(({ check }: { check: 'check-in' | 'check-out' }) => {
 
 // get the list of all days
 const CalendarDays = () => {
-    const { status, year, daysOfMonthsOfTheYear: months, selectedStart, selectedEnd, voidSelectedEnd, setSelectedStart, setStatus, setSelectedEnd, setNewYear,xLeft, yTop } = useCalendarStore()
+    const { status, year, daysOfMonthsOfTheYear: months, selectedStart, selectedEnd, voidSelectedEnd, setSelectedStart, setStatus, setSelectedEnd, setNewYear, xLeft, yTop } = useCalendarStore()
     let selectedYear = year
-    const monthIndex= {
+    const monthIndex: { [key: string]: number } = {
         January: 0, February: 1, March: 2, April: 3, May: 4, June: 5,
         July: 6, August: 7, September: 8, October: 9, November: 10, December: 11
     };
@@ -105,42 +105,43 @@ const CalendarDays = () => {
             {
                 status &&
                 <div className={`calendar-popup fixed top-0 left-0 calendar-el pb-8 border px-4 rounded-lg h-[500px] w-[325px] overflow-y-scroll overflow-x-hidden bg-white text-black`}
-                style={{top: `${yTop+40}px`, left: `${xLeft}px`}}>
+                    style={{ top: `${yTop + 40}px`, left: `${xLeft}px` }}>
                     {Object.entries(months).map(([month, days]) => {
-                        if(month === 'January' && format(startOfToday(),'d MMMM yyyy').split(' ')[1]!="January"){
-                            selectedYear+=1
+                        if (month === 'January' && format(startOfToday(), 'd MMMM yyyy').split(' ')[1] != "January") {
+                            selectedYear += 1
                             setNewYear(selectedYear)
                         }
-                        return(
-                        <div key={month}>
-                            <h2 className="font-semibold my-5 text-center">{month} {selectedYear}</h2>
-                            <div className="grid grid-cols-7 gap-1">
-                                {daysNames.map((day) => <div key={day} className="font-thin text-sm text-center mb-2">{day}</div>)}
-                            </div>
-                            <ul className="grid grid-cols-7 gap-1">
-                                {days.map((day: string, index: number) => {
-                                    if (!day) return <li key={index + day} />
-                                    const date = formatDate(parseDate(day, month))
-                                    const { isStart, isEnd, isBetween } = getDateStatuses(date)
-                                    return (
-                                        <li
-                                            key={index}
-                                            onClick={() => handleDateClick(day, month)}
-                                            className={`rounded py-0.5 px-1 cursor-pointer text-center
+                        return (
+                            <div key={month}>
+                                <h2 className="font-semibold my-5 text-center">{month} {selectedYear}</h2>
+                                <div className="grid grid-cols-7 gap-1">
+                                    {daysNames.map((day) => <div key={day} className="font-thin text-sm text-center mb-2">{day}</div>)}
+                                </div>
+                                <ul className="grid grid-cols-7 gap-1">
+                                    {days.map((day: string, index: number) => {
+                                        if (!day) return <li key={index + day} />
+                                        const date = formatDate(parseDate(day, month))
+                                        const { isStart, isEnd, isBetween } = getDateStatuses(date)
+                                        return (
+                                            <li
+                                                key={index}
+                                                onClick={() => handleDateClick(day, month)}
+                                                className={`rounded py-0.5 px-1 cursor-pointer text-center
                                                     ${isStart ? 'bg-blue-500 text-white' : ''}
                                                     ${isEnd ? 'bg-blue-500 text-white' : ''}
                                                     ${isBetween ? 'bg-gray-200' : ''}
                                                 `}
-                                        >
-                                            {isBefore(new Date(selectedYear,monthIndex[month],day),startOfToday()) &&<div className="flex justify-center items-center h-[100%]"><AiOutlineLine /></div>}
-                                            {isToday(new Date(selectedYear,monthIndex[month],day))&&<div className="border-2 rounded-full border-[#d8e2dc]">{day}</div>}
-                                            {isAfter(new Date(selectedYear,monthIndex[month],day),startOfToday())&&<div className="">{day}</div>}
-                                        </li>
-                                    )
-                                })}
-                            </ul>
-                        </div>
-                    )})}
+                                            >
+                                                {isBefore(new Date(selectedYear, monthIndex[month], Number(day)), startOfToday()) && <div className="flex justify-center items-center h-[100%]"><AiOutlineLine /></div>}
+                                                {isToday(new Date(selectedYear, monthIndex[month], Number(day))) && <div className="border-2 rounded-full border-[#d8e2dc]">{day}</div>}
+                                                {isAfter(new Date(selectedYear, monthIndex[month], Number(day)), startOfToday()) && <div className="">{day}</div>}
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            </div>
+                        )
+                    })}
                 </div>
             }
         </>
