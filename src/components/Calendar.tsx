@@ -1,8 +1,8 @@
 import { memo, useCallback, useEffect } from "react"
 import { daysNames } from "../constants/days"
 import useCalendarStore from "../stores/calendar"
-import { format, isAfter, isBefore, parse } from "date-fns"
-
+import { format, isAfter, isBefore, isToday, parse, startOfToday } from "date-fns"
+import { AiOutlineLine } from "react-icons/ai";
 
 // inputs where user can click then select the date
 // memoize my component to avoid future re-renders
@@ -39,8 +39,12 @@ const SelectDate = memo(({ check }: { check: 'check-in' | 'check-out' }) => {
 
 // get the list of all days
 const CalendarDays = () => {
-    const { status, year, daysOfMonthsOfTheYear: months, selectedStart, selectedEnd, voidSelectedEnd, setSelectedStart, setStatus, setSelectedEnd } = useCalendarStore()
-
+    const { status, year, daysOfMonthsOfTheYear: months, selectedStart, selectedEnd, voidSelectedEnd, setSelectedStart, setStatus, setSelectedEnd, setNewYear } = useCalendarStore()
+    let selectedYear = year
+    const monthIndex= {
+        January: 0, February: 1, March: 2, April: 3, May: 4, June: 5,
+        July: 6, August: 7, September: 8, October: 9, November: 10, December: 11
+    };
     const handleDateClick = useCallback((day: string, month: string) => {
         if (status === 'start') {
             const formattedDate = format(parse(`${day} ${month} ${year}`, 'd MMMM yyyy', new Date()), 'MMM d, yyyy')
@@ -82,9 +86,14 @@ const CalendarDays = () => {
             {
                 status &&
                 <div className="calendar-el pb-8 border px-4 rounded-lg h-[500px] w-[325px] overflow-y-scroll overflow-x-hidden bg-white text-black">
-                    {Object.entries(months).map(([month, days]) => (
+                    {Object.entries(months).map(([month, days]) => {
+                        if(month === 'January' && format(startOfToday(),'d MMMM yyyy').split(' ')[1]!="January"){
+                            selectedYear+=1
+                            setNewYear(selectedYear)
+                        }
+                        return(
                         <div key={month}>
-                            <h2 className="font-semibold my-5 text-center">{month} {year}</h2>
+                            <h2 className="font-semibold my-5 text-center">{month} {selectedYear}</h2>
                             <div className="grid grid-cols-7 gap-1">
                                 {daysNames.map((day) => <div key={day} className="font-thin text-sm text-center mb-2">{day}</div>)}
                             </div>
@@ -103,13 +112,15 @@ const CalendarDays = () => {
                                                     ${isBetween ? 'bg-gray-200' : ''}
                                                 `}
                                         >
-                                            {day}
+                                            {isBefore(new Date(selectedYear,monthIndex[month],day),startOfToday()) &&<div className="flex justify-center items-center h-[100%]"><AiOutlineLine /></div>}
+                                            {isToday(new Date(selectedYear,monthIndex[month],day))&&<div className="border-2 rounded-full border-[#d8e2dc]">{day}</div>}
+                                            {isAfter(new Date(selectedYear,monthIndex[month],day),startOfToday())&&<div className="">{day}</div>}
                                         </li>
                                     )
                                 })}
                             </ul>
                         </div>
-                    ))}
+                    )})}
                 </div>
             }
         </>
